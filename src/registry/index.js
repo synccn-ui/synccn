@@ -1,0 +1,239 @@
+import { Suspense, createElement, lazy } from "react";
+/**
+ * The synccn registry: metadata for every component, its live demo,
+ * the demo's source and the component's own source (both read raw at
+ * build time, so what you see on the page is exactly what ships).
+ */
+// Demos and component modules load on first use, so a page only downloads what it shows.
+const demoModules = import.meta.glob("./demos/*.tsx");
+const uiModules = import.meta.glob("./ui/*.tsx");
+
+/** A demo that loads its code the first time it renders, with a quiet placeholder meanwhile. */
+function lazyDemo(load) {
+  if (!load) return undefined;
+  const Lazy = lazy(load);
+  function Demo(props) {
+    return createElement(Suspense, { fallback: createElement("span", { className: "block size-5 animate-pulse rounded-full bg-muted", "aria-label": "Loading example" }) }, createElement(Lazy, props));
+  }
+  return Demo;
+}
+// Source text is loaded on demand, so the site only downloads the code for the page you're on.
+const demoSources = import.meta.glob("./demos/*.tsx", { query: "?raw", import: "default" });
+const uiSources = import.meta.glob("./ui/*.tsx", { query: "?raw", import: "default" });
+// JavaScript copies, generated from the TypeScript by scripts/build-js.mjs.
+const demoSourcesJs = import.meta.glob("./__generated__/js/demos/*.jsx", { query: "?raw", import: "default" });
+const uiSourcesJs = import.meta.glob("./__generated__/js/ui/*.jsx", { query: "?raw", import: "default" });
+const load = (fn) => (fn ? fn() : Promise.resolve(""));
+
+export const CATEGORIES = [
+  { id: "inputs", name: "Inputs", description: "Fields and controls that collect values." },
+  { id: "display", name: "Display", description: "Ways to present content and data." },
+  { id: "overlays", name: "Overlays", description: "Layers that appear above the page." },
+  { id: "navigation", name: "Navigation", description: "Moving between pages and steps." },
+  { id: "feedback", name: "Feedback", description: "Status, progress and loading states." },
+  { id: "motion", name: "Motion", description: "Animated text, backgrounds and effects." },
+  { id: "data", name: "Data", description: "Tables, charts and boards." },
+];
+
+
+const entries = [
+  // Inputs
+  { slug: "button", name: "Button", category: "inputs", file: "button", exports: ["Button"], description: "Seven variants, four sizes and a built-in loading state.", usage: `<Button variant="outline" size="sm">Export</Button>` },
+  { slug: "input", name: "Input", category: "inputs", file: "input", exports: ["Input", "Label"], description: "Text field with optional leading icon and invalid state.", usage: `<Input icon={Search} placeholder="Search…" />` },
+  { slug: "textarea", name: "Textarea", category: "inputs", file: "textarea", exports: ["Textarea"], description: "Multi-line field that grows with its content and counts characters.", usage: `<Textarea maxLength={180} />` },
+  { slug: "checkbox", name: "Checkbox", category: "inputs", file: "checkbox", exports: ["Checkbox"], description: "Checked, unchecked and indeterminate, with label and description.", usage: `<Checkbox label="Accept terms" defaultChecked />` },
+  { slug: "switch", name: "Switch", category: "inputs", file: "switch", exports: ["Switch"], description: "Toggle with a springy thumb in three sizes.", usage: `<Switch label="Auto-sync" defaultChecked />` },
+  { slug: "radio-group", name: "Radio Group", category: "inputs", file: "radio-group", exports: ["RadioGroup"], description: "Pick one option, shown as dots or as selectable cards.", usage: `<RadioGroup variant="cards" options={plans} />` },
+  { slug: "slider", name: "Slider", category: "inputs", file: "slider", exports: ["Slider"], description: "Single value or range, with keyboard steps and value bubbles.", usage: `<Slider defaultValue={[20, 80]} />` },
+  { slug: "select", name: "Select", category: "inputs", file: "select", exports: ["Select"], description: "Listbox with groups, icons, typeahead and full keyboard support.", usage: `<Select options={frameworks} placeholder="Pick one" />` },
+  { slug: "combobox", name: "Combobox", category: "inputs", file: "combobox", exports: ["Combobox"], description: "Select with a search box for long lists.", usage: `<Combobox options={zones} />`, deps: ["select"] },
+  { slug: "otp-input", name: "OTP Input", category: "inputs", file: "otp-input", exports: ["OtpInput"], description: "One-time code field with paste, arrows and grouping.", usage: `<OtpInput length={6} onComplete={verify} />` },
+  { slug: "tag-input", name: "Tag Input", category: "inputs", file: "tag-input", exports: ["TagInput"], description: "Type to add tags, with suggestions and a limit.", usage: `<TagInput suggestions={topics} max={6} />` },
+  { slug: "dropzone", name: "Dropzone", category: "inputs", file: "dropzone", exports: ["Dropzone"], description: "Drag-and-drop uploads with previews, size checks and progress.", usage: `<Dropzone maxSize={5 * 1048576} />` },
+  { slug: "color-picker", name: "Color Picker", category: "inputs", file: "color-picker", exports: ["ColorPicker"], description: "Saturation area, hue strip, hex field and swatches.", usage: `<ColorPicker value={hex} onValueChange={setHex} />` },
+  { slug: "rating", name: "Rating", category: "inputs", file: "rating", exports: ["Rating"], description: "Star rating with hover preview and a read-only mode.", usage: `<Rating defaultValue={4} />` },
+  { slug: "number-input", name: "Number Input", category: "inputs", file: "number-input", exports: ["NumberInput"], description: "Stepper field; hold a button to repeat faster.", usage: `<NumberInput min={1} max={50} />` },
+  { slug: "toggle-group", name: "Toggle Group", category: "inputs", file: "toggle-group", exports: ["ToggleGroup"], description: "Segmented control with a sliding indicator, single or multiple.", usage: `<ToggleGroup options={ranges} />` },
+  { slug: "calendar", name: "Calendar", category: "inputs", file: "calendar", exports: ["Calendar"], description: "Month grid for a single date or a range, with disabled days.", usage: `<Calendar mode="range" value={range} onChange={setRange} />` },
+  // Display
+  { slug: "card", name: "Card", category: "display", file: "card", exports: ["Card", "CardHeader", "CardTitle", "CardDescription", "CardContent", "CardFooter"], description: "Surface with header, content and footer slots.", usage: `<Card>\n  <CardHeader><CardTitle>Title</CardTitle></CardHeader>\n  <CardContent>…</CardContent>\n</Card>` },
+  { slug: "badge", name: "Badge", category: "display", file: "badge", exports: ["Badge"], description: "Small status label with an optional dot.", usage: `<Badge variant="success" dot>Deployed</Badge>` },
+  { slug: "avatar", name: "Avatar", category: "display", file: "avatar", exports: ["Avatar", "AvatarGroup"], description: "Image with initials fallback, presence dot and stacked groups.", usage: `<Avatar name="Michael" status="online" />` },
+  { slug: "kbd", name: "Kbd", category: "display", file: "kbd", exports: ["Kbd"], description: "Keyboard key for shortcuts and hints.", usage: `<Kbd>⌘</Kbd><Kbd>K</Kbd>` },
+  { slug: "separator", name: "Separator", category: "display", file: "kbd", exports: ["Separator"], description: "Horizontal, vertical or labelled divider.", usage: `<Separator label="or" />` },
+  { slug: "accordion", name: "Accordion", category: "display", file: "accordion", exports: ["Accordion"], description: "Expanding sections with smooth height animation.", usage: `<Accordion items={faq} type="single" />` },
+  { slug: "tabs", name: "Tabs", category: "display", file: "tabs", exports: ["Tabs", "TabsList", "TabsTrigger", "TabsContent"], description: "Pill or underline tabs with a sliding indicator and arrow keys.", usage: `<Tabs defaultValue="a">\n  <TabsList><TabsTrigger value="a">A</TabsTrigger></TabsList>\n  <TabsContent value="a">…</TabsContent>\n</Tabs>` },
+  { slug: "table", name: "Table", category: "display", file: "table", exports: ["Table", "TableHeader", "TableBody", "TableRow", "TableHead", "TableCell"], description: "Styled table parts that scroll on small screens.", usage: `<Table>…</Table>` },
+  { slug: "timeline", name: "Timeline", category: "display", file: "timeline", exports: ["Timeline"], description: "Vertical activity log with icons and tones.", usage: `<Timeline items={events} />` },
+  { slug: "stat-card", name: "Stat Card", category: "display", file: "stat-card", exports: ["StatCard"], description: "KPI tile with change and a sparkline.", usage: `<StatCard label="Revenue" value="$48,290" change={12.4} />`, deps: ["sparkline"] },
+  { slug: "empty-state", name: "Empty State", category: "display", file: "empty-state", exports: ["EmptyState"], description: "A clear next step for screens with no content yet.", usage: `<EmptyState title="No projects yet" action={…} />` },
+  { slug: "copy-button", name: "Copy Button", category: "display", file: "copy-button", exports: ["CopyButton"], description: "Copies text and confirms with an animated check.", usage: `<CopyButton value="npx shadcn@latest add @synccn/button" />` },
+  // Overlays
+  { slug: "dialog", name: "Dialog", category: "overlays", file: "dialog", exports: ["Dialog"], description: "Modal with focus trap, scroll lock and Escape to close.", usage: `<Dialog open={open} onOpenChange={setOpen} title="Edit">…</Dialog>` },
+  { slug: "sheet", name: "Sheet", category: "overlays", file: "sheet", exports: ["Sheet"], description: "Panel that slides in from the left, right or bottom.", usage: `<Sheet open={open} onOpenChange={setOpen} side="right">…</Sheet>` },
+  { slug: "dropdown-menu", name: "Dropdown Menu", category: "overlays", file: "dropdown-menu", exports: ["DropdownMenu"], description: "Actions, checkboxes, labels and shortcuts with arrow-key navigation.", usage: `<DropdownMenu trigger={<Button>Menu</Button>} items={items} />` },
+  { slug: "context-menu", name: "Context Menu", category: "overlays", file: "context-menu", exports: ["ContextMenu"], description: "Right-click menu that also opens on long-press.", usage: `<ContextMenu items={items}>…</ContextMenu>` },
+  { slug: "popover", name: "Popover", category: "overlays", file: "popover", exports: ["Popover", "PopoverTrigger", "PopoverContent"], description: "Floating panel anchored to a trigger.", usage: `<Popover>\n  <PopoverTrigger><Button>Open</Button></PopoverTrigger>\n  <PopoverContent>…</PopoverContent>\n</Popover>` },
+  { slug: "tooltip", name: "Tooltip", category: "overlays", file: "tooltip", exports: ["Tooltip"], description: "Label on hover and focus, on any side.", usage: `<Tooltip content="Bold"><button>B</button></Tooltip>` },
+  { slug: "command", name: "Command", category: "overlays", file: "command", exports: ["Command"], description: "Searchable, grouped command list — the engine behind ⌘K.", usage: `<Command groups={groups} />` },
+  // Navigation
+  { slug: "breadcrumb", name: "Breadcrumb", category: "navigation", file: "breadcrumb", exports: ["Breadcrumb"], description: "Path to the current page, with chevrons or slashes.", usage: `<Breadcrumb items={[{ label: "Home" }, { label: "Docs" }]} />` },
+  { slug: "pagination", name: "Pagination", category: "navigation", file: "pagination", exports: ["Pagination"], description: "Page numbers with ellipses for long ranges.", usage: `<Pagination total={20} />` },
+  { slug: "stepper", name: "Stepper", category: "navigation", file: "stepper", exports: ["Stepper"], description: "Progress through a multi-step flow.", usage: `<Stepper steps={steps} current={1} />` },
+  { slug: "dock", name: "Dock", category: "navigation", file: "dock", exports: ["Dock"], description: "App dock that magnifies icons near the pointer.", usage: `<Dock items={apps} />` },
+  // Feedback
+  { slug: "alert", name: "Alert", category: "feedback", file: "alert", exports: ["Alert"], description: "Inline message in five tones, with action and dismiss.", usage: `<Alert variant="warning" title="Trial ends soon">…</Alert>` },
+  { slug: "toast", name: "Toast", category: "feedback", file: "toast", exports: ["Toaster", "toast"], description: "Stacked notifications with actions, promises and hover to expand.", usage: `// once, near the root\n<Toaster />\n\n// anywhere\ntoast.success("Changes saved")` },
+  { slug: "progress", name: "Progress", category: "feedback", file: "progress", exports: ["Progress"], description: "Linear progress, determinate or indeterminate.", usage: `<Progress value={64} label="Uploading" />` },
+  { slug: "progress-ring", name: "Progress Ring", category: "feedback", file: "progress", exports: ["ProgressRing"], description: "Circular progress with content in the middle.", usage: `<ProgressRing value={68} />` },
+  { slug: "skeleton", name: "Skeleton", category: "feedback", file: "skeleton", exports: ["Skeleton"], description: "Shimmering placeholder while content loads.", usage: `<Skeleton className="h-4 w-40" />` },
+  { slug: "spinner", name: "Spinner", category: "feedback", file: "skeleton", exports: ["Spinner"], description: "Eight-bar loading indicator.", usage: `<Spinner size={20} />` },
+  // Motion
+  { slug: "marquee", name: "Marquee", category: "motion", file: "marquee", exports: ["Marquee"], description: "Endless scrolling row or column that pauses on hover.", usage: `<Marquee duration={30}>…</Marquee>` },
+  { slug: "number-ticker", name: "Number Ticker", category: "motion", file: "number-ticker", exports: ["NumberTicker"], description: "Counts up to a number when it scrolls into view.", usage: `<NumberTicker value={48290} prefix="$" />` },
+  { slug: "typewriter", name: "Typewriter", category: "motion", file: "typewriter", exports: ["Typewriter"], description: "Types and deletes a list of phrases.", usage: `<Typewriter words={["fast", "accessible"]} />` },
+  { slug: "shimmer-text", name: "Shimmer Text", category: "motion", file: "shimmer-text", exports: ["ShimmerText"], description: "A light sweep across text for loading moments.", usage: `<ShimmerText>Thinking…</ShimmerText>` },
+  { slug: "word-rotate", name: "Word Rotate", category: "motion", file: "shimmer-text", exports: ["WordRotate"], description: "Cycles words with a vertical slide.", usage: `<WordRotate words={["fast", "yours"]} />` },
+  { slug: "text-scramble", name: "Text Scramble", category: "motion", file: "shimmer-text", exports: ["TextScramble"], description: "Characters scramble and resolve left to right.", usage: `<TextScramble text="SYNC COMPLETE" />` },
+  { slug: "border-beam", name: "Border Beam", category: "motion", file: "border-beam", exports: ["BorderBeam"], description: "A light that travels around a card's border.", usage: `<div className="relative overflow-hidden rounded-xl">\n  …\n  <BorderBeam />\n</div>` },
+  { slug: "spotlight-card", name: "Spotlight Card", category: "motion", file: "spotlight-card", exports: ["SpotlightCard"], description: "Border and surface light up under the pointer.", usage: `<SpotlightCard>…</SpotlightCard>` },
+  { slug: "tilt-card", name: "Tilt Card", category: "motion", file: "spotlight-card", exports: ["TiltCard"], description: "3D tilt with glare that follows the pointer.", usage: `<TiltCard>…</TiltCard>` },
+  { slug: "orbit", name: "Orbit", category: "motion", file: "orbit", exports: ["Orbit"], description: "Items circling a centre, in rings of any size.", usage: `<Orbit radius={110}>…</Orbit>` },
+  { slug: "pattern", name: "Background Pattern", category: "motion", file: "orbit", exports: ["Pattern"], description: "Dot or grid backdrop with faded edges.", usage: `<Pattern variant="dots" />` },
+  { slug: "meteors", name: "Meteors", category: "motion", file: "orbit", exports: ["Meteors"], description: "Falling streaks of light behind content.", usage: `<Meteors count={14} />` },
+  { slug: "ripple-button", name: "Ripple Button", category: "motion", file: "ripple-button", exports: ["RippleButton"], description: "Button with a ripple from the click point.", usage: `<RippleButton>Click me</RippleButton>`, deps: ["button"] },
+  { slug: "magnetic", name: "Magnetic", category: "motion", file: "ripple-button", exports: ["Magnetic"], description: "Pulls its child toward the pointer.", usage: `<Magnetic><Button>Hover</Button></Magnetic>` },
+  { slug: "confetti", name: "Confetti", category: "motion", file: "confetti", exports: ["confetti"], description: "Canvas confetti burst with no dependencies.", usage: `confetti({ x: 0.5, y: 0.6 })` },
+  { slug: "animated-list", name: "Animated List", category: "motion", file: "animated-list", exports: ["AnimatedList"], description: "Live feed that reveals items one at a time.", usage: `<AnimatedList items={events} renderItem={(e) => …} />` },
+  // Data
+  { slug: "data-table", name: "Data Table", category: "data", file: "data-table", exports: ["DataTable"], description: "Sorting, search, column visibility, selection and paging.", usage: `<DataTable columns={columns} data={rows} />`, deps: ["table", "checkbox", "input", "dropdown-menu", "pagination"] },
+  { slug: "bar-chart", name: "Bar Chart", category: "data", file: "charts", exports: ["BarChart"], description: "Responsive SVG bars with tooltips and an entrance.", usage: `<BarChart data={[{ label: "Jan", value: 42 }]} />` },
+  { slug: "area-chart", name: "Area Chart", category: "data", file: "charts", exports: ["AreaChart"], description: "Smooth area with a crosshair tooltip.", usage: `<AreaChart data={series} />` },
+  { slug: "sparkline", name: "Sparkline", category: "data", file: "charts", exports: ["Sparkline"], description: "Tiny trend line coloured by direction.", usage: `<Sparkline values={[3, 5, 4, 8]} />` },
+  { slug: "heatmap", name: "Heatmap", category: "data", file: "heatmap", exports: ["Heatmap"], description: "Contribution-style calendar of daily counts.", usage: `<Heatmap values={{ "2026-11-01": 4 }} />` },
+  { slug: "kanban", name: "Kanban", category: "data", file: "kanban", exports: ["Kanban"], description: "Drag cards between columns.", usage: `<Kanban columns={columns} />` },
+  { slug: "date-picker", name: "Date Picker", category: "inputs", file: "date-picker", exports: ["DatePicker"], description: "Field that opens a calendar, for one date or a range, with presets.", usage: `<DatePicker mode="range" value={range} onChange={setRange} />` },
+  { slug: "time-picker", name: "Time Picker", category: "inputs", file: "time-picker", exports: ["TimePicker"], description: "Hour, minute and AM/PM columns; stores 24-hour time.", usage: `<TimePicker value="09:30" step={15} />` },
+  { slug: "password-input", name: "Password Input", category: "inputs", file: "password-input", exports: ["PasswordInput"], description: "Show/hide toggle, strength meter and a live rules checklist.", usage: `<PasswordInput />` },
+  { slug: "input-group", name: "Input Group", category: "inputs", file: "input-group", exports: ["InputGroup", "InputGroupInput", "InputAddon", "InputGroupButton"], description: "Inputs with attached prefixes, suffixes, icons and buttons.", usage: `<InputGroup>\n  <InputAddon variant="muted">https://</InputAddon>\n  <InputGroupInput />\n</InputGroup>` },
+  { slug: "form-field", name: "Form Field", category: "inputs", file: "form-field", exports: ["FormField", "FieldSet"], description: "Label, description and error wired to any control, with ARIA handled.", usage: `<FormField label="Email" error={errors.email}>\n  <Input />\n</FormField>` },
+  { slug: "toggle", name: "Toggle", category: "inputs", file: "toggle", exports: ["Toggle"], description: "A button that stays pressed or unpressed.", usage: `<Toggle aria-label="Bold"><Bold /></Toggle>` },
+  { slug: "button-group", name: "Button Group", category: "inputs", file: "button-group", exports: ["ButtonGroup"], description: "Joined buttons, split buttons and vertical stacks.", usage: `<ButtonGroup>\n  <Button variant="outline">Day</Button>\n  <Button variant="outline">Week</Button>\n</ButtonGroup>` },
+  { slug: "signature-pad", name: "Signature Pad", category: "inputs", file: "signature-pad", exports: ["SignaturePad"], description: "Draw a signature with pressure, undo and clear; exports a PNG.", usage: `<SignaturePad onChange={setPng} />` },
+  { slug: "prompt-input", name: "Prompt Input", category: "inputs", file: "prompt-input", exports: ["PromptInput"], description: "AI chat composer with attachments, toolbar slot and stop button.", usage: `<PromptInput busy={busy} onSubmit={send} onStop={stop} />`, deps: ["chat", "toggle"] },
+  { slug: "alert-dialog", name: "Alert Dialog", category: "overlays", file: "alert-dialog", exports: ["AlertDialog"], description: "Confirmation that interrupts, with optional type-to-confirm.", usage: `<AlertDialog open={open} onOpenChange={setOpen} destructive confirmText="web-app" />` },
+  { slug: "drawer", name: "Drawer", category: "overlays", file: "drawer", exports: ["Drawer"], description: "Bottom sheet you can drag down to dismiss.", usage: `<Drawer open={open} onOpenChange={setOpen} title="Move goal">…</Drawer>` },
+  { slug: "hover-card", name: "Hover Card", category: "overlays", file: "hover-card", exports: ["HoverCard"], description: "Rich preview when the pointer rests on a link.", usage: `<HoverCard trigger={<a>@michael</a>}>…</HoverCard>` },
+  { slug: "menubar", name: "Menubar", category: "overlays", file: "menubar", exports: ["Menubar"], description: "Desktop-style File, Edit, View menus with arrow-key travel.", usage: `<Menubar menus={menus} />` },
+  { slug: "navigation-menu", name: "Navigation Menu", category: "navigation", file: "navigation-menu", exports: ["NavigationMenu"], description: "Site navigation with mega-menu panels.", usage: `<NavigationMenu items={items} />` },
+  { slug: "sidebar", name: "Sidebar", category: "navigation", file: "sidebar", exports: ["Sidebar"], description: "Collapsible app sidebar with groups, badges and nested items.", usage: `<Sidebar groups={groups}>{(active) => …}</Sidebar>`, deps: ["tooltip"] },
+  { slug: "scroll-progress", name: "Scroll Progress", category: "navigation", file: "scroll-area", exports: ["ScrollProgress"], description: "Reading progress bar for the page or any scroll container.", usage: `<ScrollProgress target={ref} />` },
+  { slug: "carousel", name: "Carousel", category: "display", file: "carousel", exports: ["Carousel"], description: "Swipeable slides with arrows, dots, autoplay and multi-item views.", usage: `<Carousel perView={3} autoplay={4000}>…</Carousel>` },
+  { slug: "collapsible", name: "Collapsible", category: "display", file: "collapsible", exports: ["Collapsible"], description: "A single section that expands and collapses.", usage: `<Collapsible trigger="Show more">…</Collapsible>` },
+  { slug: "aspect-ratio", name: "Aspect Ratio", category: "display", file: "collapsible", exports: ["AspectRatio"], description: "Keeps media at a fixed shape like 16/9.", usage: `<AspectRatio ratio={16 / 9}>…</AspectRatio>` },
+  { slug: "scroll-area", name: "Scroll Area", category: "display", file: "scroll-area", exports: ["ScrollArea"], description: "Slim scrollbars with edge fades that show there's more.", usage: `<ScrollArea className="h-64">…</ScrollArea>` },
+  { slug: "resizable", name: "Resizable", category: "display", file: "resizable", exports: ["ResizablePanels"], description: "Panels split by draggable, keyboard-friendly handles.", usage: `<ResizablePanels defaultSizes={[30, 70]}>…</ResizablePanels>` },
+  { slug: "file-tree", name: "File Tree", category: "display", file: "file-tree", exports: ["FileTree"], description: "Folders and files with icons and full keyboard navigation.", usage: `<FileTree data={tree} defaultExpanded={["src"]} />` },
+  { slug: "chat", name: "Chat Bubble", category: "display", file: "chat", exports: ["ChatBubble", "TypingIndicator"], description: "Message bubbles, read status and a typing indicator.", usage: `<ChatBubble from="me" time="10:42">Shipped!</ChatBubble>`, deps: ["avatar"] },
+  { slug: "banner", name: "Banner", category: "display", file: "banner", exports: ["Banner"], description: "Announcement bar with a link and dismiss.", usage: `<Banner href="/blog">Version 3.0 is here.</Banner>` },
+  { slug: "terminal", name: "Terminal", category: "display", file: "terminal", exports: ["Terminal"], description: "Animated terminal that types commands and prints output.", usage: `<Terminal lines={lines} loop />` },
+  { slug: "code-diff", name: "Code Diff", category: "display", file: "code-diff", exports: ["CodeDiff"], description: "Unified or split view of changes between two files.", usage: `<CodeDiff before={a} after={b} filename="button.jsx" />` },
+  { slug: "browser-mockup", name: "Browser Mockup", category: "display", file: "mockups", exports: ["BrowserMockup"], description: "Browser window frame for screenshots and live UI.", usage: `<BrowserMockup url="my-app.com">…</BrowserMockup>` },
+  { slug: "phone-mockup", name: "Phone Mockup", category: "display", file: "mockups", exports: ["PhoneMockup"], description: "Phone frame with a notch for mobile screens.", usage: `<PhoneMockup>…</PhoneMockup>` },
+  { slug: "image-compare", name: "Image Compare", category: "display", file: "image-compare", exports: ["ImageCompare"], description: "Before/after slider you can drag or move with arrow keys.", usage: `<ImageCompare before={<img />} after={<img />} />` },
+  { slug: "bento-grid", name: "Bento Grid", category: "display", file: "bento-grid", exports: ["BentoGrid", "BentoCard"], description: "Asymmetric feature grid with hover reveals.", usage: `<BentoGrid>\n  <BentoCard className="md:col-span-2" title="…" />\n</BentoGrid>` },
+  { slug: "countdown", name: "Countdown", category: "display", file: "countdown", exports: ["Countdown"], description: "Live days, hours, minutes and seconds to a date.", usage: `<Countdown to="2027-01-01" />` },
+  { slug: "sortable-list", name: "Sortable List", category: "data", file: "sortable-list", exports: ["SortableList"], description: "Drag to reorder, with Alt+arrow keyboard support.", usage: `<SortableList items={items} onChange={setItems} renderItem={(it) => …} />` },
+  { slug: "line-chart", name: "Line Chart", category: "data", file: "charts", exports: ["LineChart"], description: "Multi-series lines with a toggleable legend and shared tooltip.", usage: `<LineChart labels={months} series={[{ name: "Search", values }]} />` },
+  { slug: "donut-chart", name: "Donut Chart", category: "data", file: "charts", exports: ["DonutChart"], description: "Share of a total with hover focus and a centre value.", usage: `<DonutChart data={[{ label: "Desktop", value: 60 }]} />` },
+  { slug: "gauge", name: "Gauge", category: "data", file: "charts", exports: ["Gauge"], description: "Half-circle meter that changes colour at thresholds.", usage: `<Gauge value={42} label="CPU usage" />` },
+  { slug: "blur-fade", name: "Blur Fade", category: "motion", file: "blur-fade", exports: ["BlurFade"], description: "Content fades in from a blur as it scrolls into view.", usage: `<BlurFade delay={100}>…</BlurFade>` },
+  { slug: "highlighter", name: "Highlighter", category: "motion", file: "blur-fade", exports: ["Highlighter"], description: "A marker stroke that draws under text when seen.", usage: `<Highlighter>copied, not installed</Highlighter>` },
+  { slug: "shine-border", name: "Shine Border", category: "motion", file: "shine-border", exports: ["ShineBorder"], description: "Rotating gradient that glints around a card's edge.", usage: `<ShineBorder>…</ShineBorder>` },
+  { slug: "shiny-button", name: "Shiny Button", category: "motion", file: "shine-border", exports: ["ShinyButton"], description: "Button with a light sweep and a soft glow on hover.", usage: `<ShinyButton>Get started</ShinyButton>` },
+  { slug: "particles", name: "Particles", category: "motion", file: "particles", exports: ["Particles"], description: "Drifting particles that move away from the pointer.", usage: `<div className="relative"><Particles /></div>` },
+  { slug: "retro-grid", name: "Retro Grid", category: "motion", file: "particles", exports: ["RetroGrid"], description: "Perspective grid scrolling toward the horizon.", usage: `<div className="relative"><RetroGrid /></div>` },
+  { slug: "spinning-text", name: "Spinning Text", category: "motion", file: "spinning-text", exports: ["SpinningText"], description: "Text set around a slowly rotating circle.", usage: `<SpinningText text="scroll to explore • " />` },
+  // Inputs
+  { isNew: true, slug: "search-field", name: "Search Field", category: "inputs", file: "search-field", exports: ["SearchField"], description: "Search with a / shortcut, recent searches and highlighted suggestions.", usage: `<SearchField suggestions={pages} onSearch={go} />` },
+  { isNew: true, slug: "phone-input", name: "Phone Input", category: "inputs", file: "phone-input", exports: ["PhoneInput"], description: "Country picker and a number field that formats as you type.", usage: `<PhoneInput defaultCountry="US" onChange={({ e164 }) => …} />` },
+  { isNew: true, slug: "card-input", name: "Card Input", category: "inputs", file: "card-input", exports: ["CardInput"], description: "Card number, expiry and CVC with brand detection and Luhn check.", usage: `<CardInput onChange={({ complete }) => …} />` },
+  { isNew: true, slug: "multi-select", name: "Multi Select", category: "inputs", file: "multi-select", exports: ["MultiSelect"], description: "Searchable list for picking several options, shown as chips.", usage: `<MultiSelect options={skills} max={5} />` },
+  { isNew: true, slug: "checkbox-cards", name: "Checkbox Cards", category: "inputs", file: "checkbox-cards", exports: ["CheckboxCards"], description: "Selectable cards with icons for picking several options.", usage: `<CheckboxCards options={options} />` },
+  { isNew: true, slug: "editable-text", name: "Editable Text", category: "inputs", file: "editable-text", exports: ["EditableText"], description: "Click text to edit it in place; Enter saves and Esc cancels.", usage: `<EditableText defaultValue="Q3 roadmap" />` },
+  { isNew: true, slug: "text-editor", name: "Text Editor", category: "inputs", file: "text-editor", exports: ["TextEditor"], description: "Rich text with a toolbar, shortcuts, links and a word count.", usage: `<TextEditor onChange={setHtml} />` },
+  { isNew: true, slug: "filter-chips", name: "Filter Chips", category: "inputs", file: "filter-chips", exports: ["FilterChips"], description: "Toggleable filter pills with counts and a Clear action.", usage: `<FilterChips options={statuses} />` },
+  { isNew: true, slug: "avatar-upload", name: "Avatar Upload", category: "inputs", file: "avatar-upload", exports: ["AvatarUpload"], description: "Click or drop an image to set a profile photo.", usage: `<AvatarUpload name="Michael" onChange={setFile} />` },
+  { isNew: true, slug: "reactions", name: "Reactions", category: "inputs", file: "reactions", exports: ["Reactions"], description: "Emoji reactions with counts and a picker.", usage: `<Reactions defaultValue={{ "🎉": 12 }} />` },
+  // Display
+  { isNew: true, slug: "code-block", name: "Code Block", category: "display", file: "code-block", exports: ["CodeBlock"], description: "Highlighted code with file tabs, copy and marked lines.", usage: `<CodeBlock files={[{ name: "app.jsx", code, highlight: [3] }]} />` },
+  { isNew: true, slug: "profile-card", name: "Profile Card", category: "display", file: "cards", exports: ["ProfileCard"], description: "Person card with cover, stats and a follow button.", usage: `<ProfileCard name="Michael" handle="@michael" stats={stats} />`, deps: ["avatar"] },
+  { isNew: true, slug: "pricing-card", name: "Pricing Card", category: "display", file: "cards", exports: ["PricingCard"], description: "A single plan with price, features and a call to action.", usage: `<PricingCard name="Pro" price="$12" features={features} featured />` },
+  { isNew: true, slug: "testimonial-card", name: "Testimonial Card", category: "display", file: "cards", exports: ["TestimonialCard"], description: "Quote card with name, role and optional rating.", usage: `<TestimonialCard quote="…" name="Riley" role="Designer" />` },
+  { isNew: true, slug: "post-card", name: "Post Card", category: "display", file: "cards", exports: ["PostCard"], description: "Social post with like, repost and share counts.", usage: `<PostCard name="Jayden" handle="@jayden" likes={1284}>…</PostCard>` },
+  { isNew: true, slug: "status-indicator", name: "Status Indicator", category: "display", file: "status-indicator", exports: ["StatusIndicator"], description: "Pulsing dot and label for presence or system status.", usage: `<StatusIndicator status="online" />` },
+  { isNew: true, slug: "description-list", name: "Description List", category: "display", file: "status-indicator", exports: ["DescriptionList"], description: "Key–value details that stack on phones.", usage: `<DescriptionList items={[{ term: "Plan", detail: "Pro" }]} />` },
+  { isNew: true, slug: "list-item", name: "List Item", category: "display", file: "status-indicator", exports: ["ListItem"], description: "Row with media, title, description and actions.", usage: `<ListItem media={<Avatar />} title="Michael" actions={…} />` },
+  { isNew: true, slug: "prose", name: "Prose", category: "display", file: "prose", exports: ["Prose"], description: "Typography for articles, docs and markdown output.", usage: `<Prose><h1>Title</h1><p>…</p></Prose>` },
+  { isNew: true, slug: "comparison-table", name: "Comparison Table", category: "display", file: "comparison-table", exports: ["ComparisonTable"], description: "Feature-by-plan table with grouped rows and a highlighted plan.", usage: `<ComparisonTable plans={plans} groups={groups} />` },
+  { isNew: true, slug: "week-schedule", name: "Week Schedule", category: "display", file: "week-schedule", exports: ["WeekSchedule"], description: "Week calendar with timed events and a live now-line.", usage: `<WeekSchedule events={events} />` },
+  { isNew: true, slug: "audio-player", name: "Audio Player", category: "display", file: "audio-player", exports: ["AudioPlayer"], description: "Voice-note player with a seekable waveform.", usage: `<AudioPlayer src="/note.mp3" />` },
+  // Overlays
+  { isNew: true, slug: "notification-center", name: "Notification Center", category: "overlays", file: "notification-center", exports: ["NotificationCenter"], description: "Bell with unread count and a panel of notifications.", usage: `<NotificationCenter items={notifications} />` },
+  { isNew: true, slug: "lightbox", name: "Lightbox", category: "overlays", file: "lightbox", exports: ["Lightbox"], description: "Image grid with a full-screen viewer, swipe and keyboard.", usage: `<Lightbox items={photos} />` },
+  { isNew: true, slug: "tour", name: "Tour", category: "overlays", file: "tour", exports: ["Tour"], description: "Step-by-step product tour that spotlights parts of the page.", usage: `<Tour open={open} onOpenChange={setOpen} steps={steps} />` },
+  // Navigation
+  { isNew: true, slug: "tab-bar", name: "Tab Bar", category: "navigation", file: "nav-extras", exports: ["TabBar"], description: "Mobile bottom navigation with badges.", usage: `<TabBar items={tabs} />` },
+  { isNew: true, slug: "table-of-contents", name: "Table of Contents", category: "navigation", file: "nav-extras", exports: ["TableOfContents"], description: "Section links that follow your scroll position.", usage: `<TableOfContents items={sections} />` },
+  { isNew: true, slug: "back-to-top", name: "Back to Top", category: "navigation", file: "nav-extras", exports: ["BackToTop"], description: "Appears after scrolling, with a progress ring.", usage: `<BackToTop />` },
+  { isNew: true, slug: "speed-dial", name: "Speed Dial", category: "navigation", file: "nav-extras", exports: ["SpeedDial"], description: "Floating action button that fans out more actions.", usage: `<SpeedDial actions={actions} />` },
+  { isNew: true, slug: "load-more", name: "Load More", category: "navigation", file: "nav-extras", exports: ["LoadMore"], description: "Button for long lists with loading and end states.", usage: `<LoadMore onLoad={fetchNext} hasMore={hasMore} />` },
+  // Feedback
+  { isNew: true, slug: "loaders", name: "Loaders", category: "feedback", file: "loaders", exports: ["Loader"], description: "Six loading indicators: dots, bars, pulse, ring, orbit and typing.", usage: `<Loader variant="dots" />` },
+  { isNew: true, slug: "hold-button", name: "Hold Button", category: "feedback", file: "loaders", exports: ["HoldButton"], description: "Press and hold to confirm a risky action.", usage: `<HoldButton onConfirm={remove}>Hold to delete</HoldButton>` },
+  { isNew: true, slug: "cookie-consent", name: "Cookie Consent", category: "feedback", file: "cookie-consent", exports: ["CookieConsent"], description: "Cookie banner with accept, reject and per-category choices.", usage: `<CookieConsent position="fixed" onSave={store} />`, deps: ["switch"] },
+  // Motion
+  { isNew: true, slug: "aurora", name: "Aurora", category: "motion", file: "aurora", exports: ["Aurora"], description: "Drifting coloured light behind content.", usage: `<div className="relative overflow-hidden"><Aurora /></div>` },
+  { isNew: true, slug: "gradient-text", name: "Gradient Text", category: "motion", file: "aurora", exports: ["GradientText"], description: "Text filled with a slowly moving gradient.", usage: `<GradientText>beautiful</GradientText>` },
+  { isNew: true, slug: "flip-card", name: "Flip Card", category: "motion", file: "aurora", exports: ["FlipCard"], description: "Card that flips in 3D to reveal its back.", usage: `<FlipCard front={…} back={…} />` },
+  { isNew: true, slug: "odometer", name: "Odometer", category: "motion", file: "aurora", exports: ["Odometer"], description: "Digits roll to each new value.", usage: `<Odometer value={48290} />` },
+  { isNew: true, slug: "text-animate", name: "Text Animate", category: "motion", file: "aurora", exports: ["TextAnimate"], description: "Words or letters rise into place in sequence.", usage: `<TextAnimate text="Ship faster" />` },
+  { isNew: true, slug: "ripple", name: "Ripple", category: "motion", file: "aurora", exports: ["Ripple"], description: "Concentric rings breathing behind a focal point.", usage: `<div className="relative"><Ripple /></div>` },
+  { isNew: true, slug: "animated-beam", name: "Animated Beam", category: "motion", file: "animated-beam", exports: ["AnimatedBeam"], description: "Light travelling along curves between elements.", usage: `<AnimatedBeam containerRef={box} fromRef={a} toRef={b} />` },
+  { isNew: true, slug: "globe", name: "Globe", category: "motion", file: "globe", exports: ["Globe"], description: "Dotted, draggable globe with pulsing markers.", usage: `<Globe markers={[{ lat: 34, lng: -118 }]} />` },
+  // Data
+  { isNew: true, slug: "bar-list", name: "Bar List", category: "data", file: "data-viz", exports: ["BarList"], description: "Ranked horizontal bars for top pages, sources and more.", usage: `<BarList data={[{ name: "/", value: 1200 }]} />` },
+  { isNew: true, slug: "tracker", name: "Tracker", category: "data", file: "data-viz", exports: ["Tracker"], description: "Uptime-style row of status bars with tooltips.", usage: `<Tracker data={days} />` },
+  { isNew: true, slug: "category-bar", name: "Category Bar", category: "data", file: "data-viz", exports: ["CategoryBar"], description: "One bar split into proportional, labelled segments.", usage: `<CategoryBar data={usage} />` },
+  { isNew: true, slug: "funnel-chart", name: "Funnel Chart", category: "data", file: "data-viz", exports: ["FunnelChart"], description: "Conversion steps with drop-off between each.", usage: `<FunnelChart data={steps} />` },
+  // Signature components
+  { isNew: true, slug: "data-view", name: "DataView", category: "data", file: "data-view", exports: ["DataView"], description: "Data table for real apps: resizable and hideable columns, selection with bulk actions, saved views, server mode, and loading, empty and error states.", usage: `<DataView columns={columns} data={rows} rowKey={(r) => r.id} selectable bulkActions={(rows) => …} />` },
+  { isNew: true, slug: "filter-builder", name: "Filter Builder", category: "inputs", file: "filter-builder", exports: ["FilterBuilder", "matchesFilter", "filterToString"], description: "Build conditions like Status is Active AND Revenue > 1000, with nested groups and operators per field type.", usage: `<FilterBuilder fields={fields} value={filter} onValueChange={setFilter} />\n\nrows.filter((r) => matchesFilter(r, filter, fields))` },
+  { isNew: true, slug: "activity-timeline", name: "Activity Timeline", category: "display", file: "activity-timeline", exports: ["ActivityTimeline"], description: "Audit log and activity feed grouped by day, with avatars, outcomes, type filters and expandable details.", usage: `<ActivityTimeline events={events} types={{ deploy: "Deploys" }} />` },
+  { isNew: true, slug: "command-center", name: "Command Center", category: "overlays", file: "command-center", exports: ["CommandCenter", "CommandCenterDialog"], description: "Command palette with nested pages, recent commands, async providers and match highlighting.", usage: `<CommandCenterDialog open={open} onOpenChange={setOpen} providers={providers} />` },
+  { isNew: true, slug: "inspector-drawer", name: "Inspector Drawer", category: "overlays", file: "inspector-drawer", exports: ["InspectorDrawer", "InspectorProperties", "InspectorSection"], description: "Detail panel for the selected item: tabs, collapsible sections, editable properties with unsaved-change tracking.", usage: `<InspectorDrawer open={!!item} onOpenChange={close} title={item.name} tabs={tabs} />` },
+  { isNew: true, slug: "permissions-matrix", name: "Permissions Matrix", category: "data", file: "permissions-matrix", exports: ["PermissionsMatrix"], description: "Roles by permissions grid with inheritance, locked permissions, group toggles and unsaved changes.", usage: `<PermissionsMatrix roles={roles} groups={groups} value={grants} onValueChange={setGrants} saved={saved} />` },
+  { isNew: true, slug: "async-state", name: "Async State", category: "feedback", file: "async-state", exports: ["AsyncState", "useAsync"], description: "Loading, empty, error and timeout states in one place, with retries and screen reader announcements.", usage: `const result = useAsync((signal) => fetchInvoices(signal), []);\n\n<AsyncState {...result} onRetry={result.retry}>{(rows) => …}</AsyncState>` },
+];
+
+const order = (c) => CATEGORIES.findIndex((x) => x.id === c);
+
+export const registry = [...entries].sort((a, b) => order(a.category) - order(b.category)).map((e) => ({
+  ...e,
+  Demo: lazyDemo(demoModules[`./demos/${e.slug}.tsx`]),
+  loadModule: uiModules[`./ui/${e.file}.tsx`],
+  /** Resolves to { demo: { ts, js }, source: { ts, js } }. */
+  loadCode: async () => {
+    const [dt, dj, st, sj] = await Promise.all([
+      load(demoSources[`./demos/${e.slug}.tsx`]),
+      load(demoSourcesJs[`./__generated__/js/demos/${e.slug}.jsx`]),
+      load(uiSources[`./ui/${e.file}.tsx`]),
+      load(uiSourcesJs[`./__generated__/js/ui/${e.file}.jsx`]),
+    ]);
+    return { demo: { ts: dt, js: dj }, source: { ts: st, js: sj } };
+  },
+}));
+
+export const bySlug = Object.fromEntries(registry.map((e) => [e.slug, e]));
+
+export const grouped = CATEGORIES.map((c) => ({ ...c, items: registry.filter((r) => r.category === c.id) }));

@@ -1,0 +1,38 @@
+{
+  "name": "synccn-registry",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Source for the synccn component registry: 162 React components, demos and blocks built on Tailwind CSS.",
+  "license": "MIT",
+  "homepage": "https://synccn.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/synccn-ui/synccn"
+  },
+  "scripts": {
+    "generate": "node scripts/build-js.mjs && node scripts/build-api.mjs && node scripts/build-registry.mjs",
+    "registry": "node scripts/build-registry.mjs",
+    "check": "npm run generate && node scripts/check-registry.mjs",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.77.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "sugar-high": "^2.7.0",
+    "tailwind-merge": "^3.7.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "prettier": "^3.10.1",
+    "shadcn": "^4.23.0",
+    "sucrase": "^3.35.1",
+    "ts5": "npm:typescript@5.9",
+    "typescript": "^7.0.2",
+    "tailwindcss": "^4.3.5",
+    "vite": "^8.3.8"
+  }
+}
