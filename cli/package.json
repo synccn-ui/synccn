@@ -1,5 +1,5 @@
 {
-  "name": "synccn",
+  "name": "@synccn/cli",
   "version": "0.1.0",
   "description": "Keep synccn components up to date without losing your edits: status, diffs, three-way merges with backups, and a project doctor.",
   "type": "module",
@@ -21,10 +21,13 @@
   "homepage": "https://synccn.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/synccn-ui/synccn",
+    "url": "git+https://github.com/synccn-ui/synccn.git",
     "directory": "cli"
   },
   "bugs": {
     "url": "https://github.com/synccn-ui/synccn/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -35,7 +35,7 @@ import {
 
 const HELP = `${c.bold("synccn")} keeps synccn components up to date without losing your edits.
 
-${c.bold("Usage")}
+${c.bold("Usage")}  (run with npx @synccn/cli <command>, or install it and use synccn <command>)
   synccn add <names...>      Install with the shadcn CLI and start tracking them
   synccn track <names...>    Start tracking components you already installed
   synccn status              What's changed upstream and what you've changed
@@ -91,7 +91,7 @@ function mergeFile(local, base, latest) {
 /* ---------- commands ---------- */
 
 async function add() {
-  if (!names.length) throw new CliError("Name at least one component, e.g. synccn add button.");
+  if (!names.length) throw new CliError("Name at least one component, e.g. npx @synccn/cli add button.");
   const project = loadProject(cwd);
   const wanted = names.map(strip);
   const tree = await resolveTree(project, wanted, registry);
@@ -110,17 +110,17 @@ async function add() {
     tracked.push(name);
   }
   saveManifest(project, manifest);
-  console.log(`\n${c.green("✓")} Tracking ${plural(tracked.length, "component")}${tracked.length ? `: ${tracked.join(", ")}` : ""}. Run ${c.cyan("synccn status")} any time.`);
+  console.log(`\n${c.green("✓")} Tracking ${plural(tracked.length, "component")}${tracked.length ? `: ${tracked.join(", ")}` : ""}. Run ${c.cyan("npx @synccn/cli status")} any time.`);
 }
 
 async function trackCmd() {
-  if (!names.length) throw new CliError("Name the components to track, e.g. synccn track button dialog.");
+  if (!names.length) throw new CliError("Name the components to track, e.g. npx @synccn/cli track button dialog.");
   const project = loadProject(cwd);
   const manifest = loadManifest(project);
   for (const name of names.map(strip)) {
     const item = await fetchItem(project, name, registry);
     const missing = (item.files ?? []).map((f) => targetPath(project, f)).filter((p) => !fs.existsSync(p));
-    if (missing.length) throw new CliError(`${name}: ${missing.map((p) => path.relative(cwd, p)).join(", ")} doesn't exist. Install it with synccn add ${name}.`);
+    if (missing.length) throw new CliError(`${name}: ${missing.map((p) => path.relative(cwd, p)).join(", ")} doesn't exist. Install it with npx @synccn/cli add ${name}.`);
     track(project, manifest, name, item);
     const changed = manifest.items[name].files.filter((f) => fileState(project, f).localChanged).length;
     console.log(`${c.green("✓")} ${name}${changed ? c.dim(` (your copy differs from the current version in ${plural(changed, "file")}; those differences count as your edits)`) : ""}`);
@@ -132,7 +132,7 @@ async function status() {
   const project = loadProject(cwd);
   const manifest = loadManifest(project);
   const entries = Object.entries(manifest.items);
-  if (!entries.length) return console.log(`Nothing tracked yet. Use ${c.cyan("synccn add <name>")} or ${c.cyan("synccn track <name>")}.`);
+  if (!entries.length) return console.log(`Nothing tracked yet. Use ${c.cyan("npx @synccn/cli add <name>")} or ${c.cyan("npx @synccn/cli track <name>")}.`);
   let updates = 0;
   const rows = [];
   for (const [name, entry] of entries.sort()) {
@@ -147,15 +147,15 @@ async function status() {
   }
   const w = Math.max(...rows.map((r) => r[0].length));
   for (const [n, l, v] of rows) console.log(`  ${n.padEnd(w)}  ${l}  ${c.dim(v)}`);
-  console.log(`\n${updates ? `${plural(updates, "update")} available. Preview with ${c.cyan("synccn update --dry-run")}.` : "Everything is current."}`);
+  console.log(`\n${updates ? `${plural(updates, "update")} available. Preview with ${c.cyan("npx @synccn/cli update --dry-run")}.` : "Everything is current."}`);
 }
 
 async function diff() {
   const name = names[0] && strip(names[0]);
-  if (!name) throw new CliError("Name a component, e.g. synccn diff button.");
+  if (!name) throw new CliError("Name a component, e.g. npx @synccn/cli diff button.");
   const project = loadProject(cwd);
   const entry = loadManifest(project).items[name];
-  if (!entry) throw new CliError(`${name} isn't tracked. Run synccn track ${name} first.`);
+  if (!entry) throw new CliError(`${name} isn't tracked. Run npx @synccn/cli track ${name} first.`);
   const item = await fetchItem(project, name, registry);
   for (const file of item.files ?? []) {
     const rel = path.relative(cwd, targetPath(project, file)).split(path.sep).join("/");
@@ -179,7 +179,7 @@ async function update() {
   if (!project.tsx) throw new CliError('Merging needs TypeScript sources ("tsx": true). In a JavaScript project, review with npx shadcn@latest add @synccn/<name> --diff.');
   const manifest = loadManifest(project);
   const pool = names.length ? names.map(strip) : Object.keys(manifest.items);
-  for (const n of pool) if (!manifest.items[n]) throw new CliError(`${n} isn't tracked. Run synccn track ${n} first.`);
+  for (const n of pool) if (!manifest.items[n]) throw new CliError(`${n} isn't tracked. Run npx @synccn/cli track ${n} first.`);
 
   const plan = [];
   for (const name of pool) {
@@ -240,27 +240,27 @@ async function update() {
   }
   saveManifest(project, manifest);
 
-  if (id) console.log(`${c.green("✓")} Backed up to .synccn/backups/${id} (undo with ${c.cyan(`synccn restore ${id}`)})`);
+  if (id) console.log(`${c.green("✓")} Backed up to .synccn/backups/${id} (undo with ${c.cyan(`npx @synccn/cli restore ${id}`)})`);
   if (applied.length) console.log(`${c.green("✓")} Updated ${applied.join(", ")}`);
-  if (conflicts.length && !flags.has("--force")) console.log(c.yellow(`! Skipped ${plural(conflicts.length, "file")} with conflicts: ${conflicts.map((f) => f.rel).join(", ")}. Review with synccn diff, then rerun with --force to write conflict markers.`));
+  if (conflicts.length && !flags.has("--force")) console.log(c.yellow(`! Skipped ${plural(conflicts.length, "file")} with conflicts: ${conflicts.map((f) => f.rel).join(", ")}. Review with npx @synccn/cli diff, then rerun with --force to write conflict markers.`));
   if (conflicts.length && flags.has("--force")) console.log(c.yellow(`! Wrote conflict markers in ${conflicts.map((f) => f.rel).join(", ")}. Search for <<<<<<< and keep what you want.`));
   const pkgs = [...new Set(plan.flatMap((p) => p.newPackages))];
   if (pkgs.length) console.log(`Install the new packages: ${c.cyan(`${packageManager(cwd).add} ${pkgs.join(" ")}`)}`);
   const comps = [...new Set(plan.flatMap((p) => p.newComponents))];
-  if (comps.length) console.log(`Add the components they now use: ${c.cyan(`synccn add ${comps.join(" ")}`)}`);
+  if (comps.length) console.log(`Add the components they now use: ${c.cyan(`npx @synccn/cli add ${comps.join(" ")}`)}`);
 }
 
 async function restore() {
   const project = loadProject(cwd);
   const backups = listBackups(project);
-  if (!backups.length) return console.log("No backups yet. synccn update makes one before it changes anything.");
+  if (!backups.length) return console.log("No backups yet. npx @synccn/cli update makes one before it changes anything.");
   if (!names[0]) {
     console.log(c.bold("Backups (newest first)"));
     for (const b of backups) console.log(`  ${b.id}  ${c.dim(plural(b.files.length, "file"))}`);
-    return console.log(`\nRestore one with ${c.cyan(`synccn restore ${backups[0].id}`)}.`);
+    return console.log(`\nRestore one with ${c.cyan(`npx @synccn/cli restore ${backups[0].id}`)}.`);
   }
   const b = backups.find((x) => x.id === names[0]);
-  if (!b) throw new CliError(`No backup called ${names[0]}. Run synccn restore to list them.`);
+  if (!b) throw new CliError(`No backup called ${names[0]}. Run npx @synccn/cli restore to list them.`);
   restoreBackup(project, b);
   console.log(`${c.green("✓")} Restored ${plural(b.files.length, "file")} and the update tracking from ${b.id}.`);
 }
@@ -274,7 +274,7 @@ async function doctor() {
 
   const pkgPath = path.join(cwd, "package.json");
   if (!fs.existsSync(pkgPath)) {
-    fail("No package.json here.", "Run synccn doctor from your project folder, or pass --cwd.");
+    fail("No package.json here.", "Run npx @synccn/cli doctor from your project folder, or pass --cwd.");
     return report(results);
   }
   const pkg = JSON.parse(readText(pkgPath));
@@ -311,7 +311,7 @@ async function doctor() {
     cfg.registries = { ...(cfg.registries ?? {}), "@synccn": DEFAULT_REGISTRY };
     fs.writeFileSync(file, JSON.stringify(cfg, null, 2) + "\n");
     ok("Added the @synccn registry to components.json");
-  } else warn("The @synccn registry isn't in components.json", "Run synccn doctor --fix, or npx shadcn@latest registry add @synccn=" + DEFAULT_REGISTRY);
+  } else warn("The @synccn registry isn't in components.json", "Run npx @synccn/cli doctor --fix, or npx shadcn@latest registry add @synccn=" + DEFAULT_REGISTRY);
 
   const cssPath = project.config.tailwind?.css ? path.join(cwd, project.config.tailwind.css) : null;
   if (!cssPath || !fs.existsSync(cssPath)) fail("The stylesheet in components.json (tailwind.css) doesn't exist.", "Point tailwind.css at your global CSS file.");
@@ -324,7 +324,7 @@ async function doctor() {
       const [bin, ...pre] = packageManager(cwd).dlx.split(" ");
       const r = spawnSync(bin, [...pre, "shadcn@latest", "add", registryUrl(project, "base"), "--yes"], { cwd, stdio: "inherit" });
       r.status === 0 ? ok("Added the synccn styles") : fail("Couldn't add the synccn styles", "Run npx shadcn@latest add @synccn/base yourself.");
-    } else warn("synccn styles (tokens, animations, utilities) aren't in your CSS", "Run synccn doctor --fix, or npx shadcn@latest add @synccn/base.");
+    } else warn("synccn styles (tokens, animations, utilities) aren't in your CSS", "Run npx @synccn/cli doctor --fix, or npx shadcn@latest add @synccn/base.");
     for (const token of ["--background", "--foreground", "--primary", "--border", "--ring"]) {
       if (!css.includes(`${token}:`)) {
         warn(`Theme variable ${token} isn't defined`, "Paste a theme from https://synccn.com/themes.");
@@ -347,7 +347,7 @@ async function doctor() {
         warn(`Couldn't check ${name} against the registry`, "Check your connection or the registry URL.");
       }
     }
-    missingFiles.length ? fail(`Tracked files are missing: ${missingFiles.join(", ")}`, "Reinstall with synccn add, or untrack by deleting the entry in .synccn/manifest.json.") : ok(`${plural(tracked.length, "tracked component")}, all files present`);
+    missingFiles.length ? fail(`Tracked files are missing: ${missingFiles.join(", ")}`, "Reinstall with npx @synccn/cli add, or untrack by deleting the entry in .synccn/manifest.json.") : ok(`${plural(tracked.length, "tracked component")}, all files present`);
     missingPkgs.size ? fail(`Packages your components import aren't installed: ${[...missingPkgs].join(", ")}`, `${packageManager(cwd).add} ${[...missingPkgs].join(" ")}`) : ok("Every package the tracked components import is installed");
   } else ok("No components tracked yet");
   report(results);
