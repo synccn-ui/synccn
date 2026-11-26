@@ -14,11 +14,11 @@ export default function DropdownMenuDemo() {
     <DropdownMenu
       trigger={
         <Button variant="outline" className="gap-2 pl-1.5">
-          <Avatar name="Michael" size="xs" /> Michael <ChevronDown className="text-muted-foreground" />
+          <Avatar name="synccn" size="xs" /> synccn <ChevronDown className="text-muted-foreground" />
         </Button>
       }
       items={[
-        { type: "label", label: "michael@example.com" },
+        { type: "label", label: "synccn@example.com" },
         { label: "Profile", icon: User, shortcut: "⇧⌘P", onSelect: () => toast("Opening profile") },
         { label: "Billing", icon: CreditCard, shortcut: "⌘B" },
         { label: "Team", icon: Users },

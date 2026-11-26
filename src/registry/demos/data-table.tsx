@@ -5,9 +5,9 @@ import { Badge, type BadgeVariant } from "@/registry/ui/badge";
 import { DataTable } from "@/registry/ui/data-table";
 
 const people = [
-  { id: 1, name: "Michael", email: "michael@example.com", role: "Owner", status: "Active", spend: 1240 },
-  { id: 2, name: "Riley", email: "riley@example.com", role: "Admin", status: "Active", spend: 860 },
-  { id: 3, name: "Jayden", email: "jayden@example.com", role: "Editor", status: "Invited", spend: 0 },
+  { id: 1, name: "synccn", email: "synccn@example.com", role: "Owner", status: "Active", spend: 1240 },
+  { id: 2, name: "synccn", email: "synccn@example.com", role: "Admin", status: "Active", spend: 860 },
+  { id: 3, name: "synccn", email: "synccn@example.com", role: "Editor", status: "Invited", spend: 0 },
 ];
 const tone: Record<string, BadgeVariant> = { Active: "success", Invited: "soft", Suspended: "destructive" };
 

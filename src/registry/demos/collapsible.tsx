@@ -12,7 +12,7 @@ export default function CollapsibleDemo() {
       trigger={({ open, toggle, ...aria }) => (
         <div className="grid gap-2">
           <div className="flex items-center justify-between gap-4 px-1">
-            <p className="text-sm font-semibold">Michael starred 4 repositories</p>
+            <p className="text-sm font-semibold">synccn starred 4 repositories</p>
             <button type="button" onClick={toggle} {...aria} aria-label={open ? "Show fewer" : "Show all"} className="grid size-8 place-items-center rounded-md hover:bg-accent">
               <ChevronsUpDown className="size-4" />
             </button>

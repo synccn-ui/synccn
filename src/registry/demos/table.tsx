@@ -2,10 +2,10 @@ import { Badge, type BadgeVariant } from "@/registry/ui/badge";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/registry/ui/table";
 
 const invoices = [
-  { id: "INV-1042", client: "Michael", status: "Paid", amount: 1250 },
-  { id: "INV-1043", client: "Riley", status: "Pending", amount: 820 },
-  { id: "INV-1044", client: "Jayden", status: "Paid", amount: 2400 },
-  { id: "INV-1045", client: "Michael", status: "Overdue", amount: 460 },
+  { id: "INV-1042", client: "synccn", status: "Paid", amount: 1250 },
+  { id: "INV-1043", client: "synccn", status: "Pending", amount: 820 },
+  { id: "INV-1044", client: "synccn", status: "Paid", amount: 2400 },
+  { id: "INV-1045", client: "synccn", status: "Overdue", amount: 460 },
 ];
 const tone: Record<string, BadgeVariant> = { Paid: "success", Pending: "warning", Overdue: "destructive" };
 const usd = (n: number) => n.toLocaleString("en-US", { style: "currency", currency: "USD" });

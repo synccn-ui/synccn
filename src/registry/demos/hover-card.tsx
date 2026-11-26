@@ -12,20 +12,20 @@ export default function HoverCardDemo() {
       <HoverCard
         trigger={
           <a href="#" onClick={(e) => e.preventDefault()} className="font-medium text-foreground underline decoration-border underline-offset-4 hover:decoration-foreground">
-            @michael
+            @synccn
           </a>
         }
       >
         <div className="grid gap-3 text-left">
           <div className="flex items-start justify-between">
-            <Avatar name="Michael" size="lg" status="online" />
+            <Avatar name="synccn" size="lg" status="online" />
             <Button size="sm" variant="outline">
               Follow
             </Button>
           </div>
           <div className="grid gap-0.5">
-            <p className="font-semibold text-foreground">Michael</p>
-            <p className="text-[13px]">michael@example.com</p>
+            <p className="font-semibold text-foreground">synccn</p>
+            <p className="text-[13px]">synccn@example.com</p>
           </div>
           <p className="text-[13px] text-foreground">Design engineer. Writes components and the docs that explain them.</p>
           <div className="flex gap-4 text-xs">

@@ -13,7 +13,7 @@ export default function WeekScheduleDemo() {
       events={[
         { day: 0, start: 9, end: 10, title: "Standup", tone: "blue" },
         { day: 0, start: 13, end: 15, title: "Design review", tone: "violet" },
-        { day: 1, start: 10, end: 11.5, title: "1:1 with Riley", tone: "green" },
+        { day: 1, start: 10, end: 11.5, title: "1:1 with synccn", tone: "green" },
         { day: 2, start: 9, end: 10, title: "Standup", tone: "blue" },
         { day: 2, start: 11, end: 13, title: "Deep work", tone: "amber" },
         { day: 3, start: 14, end: 16, title: "Sprint planning", tone: "rose" },

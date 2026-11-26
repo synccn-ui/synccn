@@ -30,15 +30,15 @@ interface Member {
 }
 
 const ROLE_NAMES = { viewer: "Viewer", editor: "Editor", admin: "Admin" } as const;
-const NAMES = ["Michael Stone", "Riley Park", "Jayden Reyes", "Avery Lin", "Jordan Okafor", "Casey Novak", "Morgan Ibarra", "Quinn Shah", "Harper Stone", "Rowan Park", "Sky Reyes", "Drew Lin"];
+const NAMES = ["synccn"];
 const MEMBERS: Member[] = NAMES.map((name, i) => ({
   id: `usr_${i + 1}`,
   name,
-  email: `${name.split(" ")[0].toLowerCase()}@acme.dev`,
-  role: (["admin", "editor", "editor", "viewer"] as const)[i % 4],
-  status: i === 9 ? "Suspended" : "Active",
+  email: "synccn@example.com",
+  role: (["admin", "editor", "viewer"] as const)[i % 3],
+  status: "Active",
   mfa: i % 3 !== 2,
-  lastSeen: [3, 40, 120, 600, 1500, 2900][i % 6],
+  lastSeen: [3, 40, 120][i % 3],
 }));
 
 const roles: PermissionRole[] = [
@@ -72,11 +72,11 @@ export default function SaasAdminBlock() {
   const [selected, setSelected] = useState<Member | null>(null);
   const [saved, setSaved] = useState(GRANTS);
   const [grants, setGrants] = useState(GRANTS);
-  const [org, setOrg] = useState({ name: "Acme", sso: false, mfa: true });
+  const [org, setOrg] = useState({ name: "Example", sso: false, mfa: true });
   const [log, setLog] = useState<{ id: string; actor: string; action: string; target: string; minutes: number; status?: ActivityEvent["status"] }[]>([
-    { id: "a1", actor: "Michael Stone", action: "changed the role of", target: "Riley Park to Editor", minutes: 35 },
-    { id: "a2", actor: "Avery Lin", action: "signed in from a new device", target: "", minutes: 190, status: "warning" },
-    { id: "a3", actor: "Michael Stone", action: "suspended", target: "Rowan Park", minutes: 1600, status: "error" },
+    { id: "a1", actor: "synccn", action: "changed the role of", target: "synccn to Editor", minutes: 35 },
+    { id: "a2", actor: "synccn", action: "signed in from a new device", target: "", minutes: 190, status: "warning" },
+    { id: "a3", actor: "synccn", action: "invited", target: "synccn@example.com", minutes: 1600 },
   ]);
   const record = (action: string, target: string, status?: ActivityEvent["status"]) => setLog((l) => [{ id: `a${l.length + 1}-${target}`, actor: "You", action, target, minutes: 0, status }, ...l]);
 
@@ -131,7 +131,7 @@ export default function SaasAdminBlock() {
     <div className="grid w-full max-w-6xl gap-5 rounded-2xl border bg-background p-4 text-left sm:p-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-semibold tracking-tight">{org.name} admin</h2>
+          <h2 className="text-lg font-semibold tracking-tight">Admin Dashboard</h2>
           <p className="text-sm text-muted-foreground">
             {members.filter((m) => m.status === "Active").length} active members · {members.filter((m) => m.status === "Invited").length} pending invites
           </p>

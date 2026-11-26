@@ -6,10 +6,10 @@ import { SortableList } from "@/registry/ui/sortable-list";
 
 export default function SortableListDemo() {
   const [items, setItems] = useState([
-    { id: "a", label: "Design review", owner: "Michael", tag: "Today" },
-    { id: "b", label: "Ship pricing page", owner: "Riley", tag: "Tomorrow" },
-    { id: "c", label: "Write release notes", owner: "Jayden", tag: "Friday" },
-    { id: "d", label: "Plan next sprint", owner: "Michael", tag: "Next week" },
+    { id: "a", label: "Design review", owner: "synccn", tag: "Today" },
+    { id: "b", label: "Ship pricing page", owner: "synccn", tag: "Tomorrow" },
+    { id: "c", label: "Write release notes", owner: "synccn", tag: "Friday" },
+    { id: "d", label: "Plan next sprint", owner: "synccn", tag: "Next week" },
   ]);
   return (
     <div className="grid w-full max-w-sm gap-2">

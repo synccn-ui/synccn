@@ -32,11 +32,11 @@ export default function SidebarDemo() {
       ]}
       footer={(collapsed) => (
         <div className="flex items-center gap-2.5 rounded-lg p-1.5">
-          <Avatar name="Michael" size="sm" status="online" />
+          <Avatar name="synccn" size="sm" status="online" />
           {!collapsed && (
             <div className="grid min-w-0 text-left">
-              <span className="truncate text-sm font-medium">Michael</span>
-              <span className="truncate text-xs text-muted-foreground">michael@example.com</span>
+              <span className="truncate text-sm font-medium">synccn</span>
+              <span className="truncate text-xs text-muted-foreground">synccn@example.com</span>
             </div>
           )}
         </div>

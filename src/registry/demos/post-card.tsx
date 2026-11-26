@@ -3,8 +3,8 @@ import { PostCard } from "@/registry/ui/cards";
 export default function PostCardDemo() {
   return (
     <PostCard
-      name="Jayden"
-      handle="@jayden"
+      name="synccn"
+      handle="@synccn"
       time="3h"
       likes={1284}
       reposts={96}

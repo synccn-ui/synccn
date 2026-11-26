@@ -22,7 +22,7 @@ const fields: FilterField[] = [
 
 const rows = [
   { company: "Northwind", status: "active", revenue: 4200, signup: "2026-03-14", verified: true },
-  { company: "Acme Labs", status: "active", revenue: 860, signup: "2026-06-02", verified: true },
+  { company: "Northwind Labs", status: "active", revenue: 860, signup: "2026-06-02", verified: true },
   { company: "Globex", status: "trial", revenue: 0, signup: "2026-10-28", verified: false },
   { company: "Initech", status: "churned", revenue: 1300, signup: "2025-12-01", verified: true },
   { company: "Umbrella", status: "active", revenue: 15800, signup: "2026-01-19", verified: true },

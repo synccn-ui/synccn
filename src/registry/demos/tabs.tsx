@@ -24,7 +24,7 @@ export default function TabsDemo() {
         <TabsContent value="account" className="grid gap-3 rounded-xl border p-4">
           <div className="grid gap-2">
             <Label htmlFor="tab-name">Display name</Label>
-            <Input id="tab-name" defaultValue="Michael" />
+            <Input id="tab-name" defaultValue="synccn" />
           </div>
           <Button className="w-fit">Save changes</Button>
         </TabsContent>
