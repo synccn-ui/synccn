@@ -8,7 +8,7 @@ export default function EditableTextDemo() {
       <EditableText as="h3" defaultValue="Q3 product roadmap" className="text-lg font-semibold" />
       <div className="grid gap-1 text-sm">
         <span className="text-muted-foreground">Owner</span>
-        <EditableText defaultValue="Michael" />
+        <EditableText defaultValue="synccn" />
       </div>
       <div className="grid gap-1 text-sm">
         <span className="text-muted-foreground">Budget</span>

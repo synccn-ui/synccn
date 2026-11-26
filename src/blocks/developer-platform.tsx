@@ -31,11 +31,11 @@ interface Deployment {
 }
 
 const DEPLOYMENTS: Deployment[] = [
-  { id: "dpl_9f2a", branch: "main", commit: "a41c9e2", message: "Add saved views to DataView", author: "Michael", status: "Ready", env: "Production", minutesAgo: 6, duration: "41s" },
-  { id: "dpl_9f19", branch: "feat/billing-retries", commit: "7be0d13", message: "Cap webhook retries at three", author: "Riley", status: "Building", env: "Preview", minutesAgo: 2, duration: "…" },
-  { id: "dpl_9e77", branch: "main", commit: "e02f6aa", message: "Upgrade to Node 24", author: "Jayden", status: "Failed", env: "Production", minutesAgo: 95, duration: "1m 12s" },
-  { id: "dpl_9e40", branch: "fix/eu-latency", commit: "c93b712", message: "Pin eu-west-1 read replica", author: "Riley", status: "Ready", env: "Preview", minutesAgo: 240, duration: "38s" },
-  { id: "dpl_9d02", branch: "main", commit: "55d01fe", message: "Release 5.2", author: "Michael", status: "Rolled back", env: "Production", minutesAgo: 1560, duration: "44s" },
+  { id: "dpl_9f2a", branch: "main", commit: "a41c9e2", message: "Add saved views to DataView", author: "synccn", status: "Ready", env: "Production", minutesAgo: 6, duration: "41s" },
+  { id: "dpl_9f19", branch: "feat/billing-retries", commit: "7be0d13", message: "Cap webhook retries at three", author: "synccn", status: "Building", env: "Preview", minutesAgo: 2, duration: "…" },
+  { id: "dpl_9e77", branch: "main", commit: "e02f6aa", message: "Upgrade to Node 24", author: "synccn", status: "Failed", env: "Production", minutesAgo: 95, duration: "1m 12s" },
+  { id: "dpl_9e40", branch: "fix/eu-latency", commit: "c93b712", message: "Pin eu-west-1 read replica", author: "synccn", status: "Ready", env: "Preview", minutesAgo: 240, duration: "38s" },
+  { id: "dpl_9d02", branch: "main", commit: "55d01fe", message: "Release 5.2", author: "synccn", status: "Rolled back", env: "Production", minutesAgo: 1560, duration: "44s" },
 ];
 
 /*
@@ -287,7 +287,7 @@ export default function DeveloperPlatformBlock() {
     <div className="grid w-full max-w-6xl gap-5 rounded-2xl border bg-background p-4 text-left sm:p-6">
       <header className="flex flex-wrap items-center justify-between gap-3">
         <div className="grid gap-1">
-          <h2 className="text-lg font-semibold tracking-tight">acme/web</h2>
+          <h2 className="text-lg font-semibold tracking-tight">example/web</h2>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm">
             <StatusIndicator status="online" label="API" />
             <StatusIndicator status="away" label="Webhooks degraded" />

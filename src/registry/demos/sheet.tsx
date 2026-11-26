@@ -19,11 +19,11 @@ export default function SheetDemo() {
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="sh-name">Name</Label>
-            <Input id="sh-name" defaultValue="Michael" />
+            <Input id="sh-name" defaultValue="synccn" />
           </div>
           <div className="grid gap-2">
             <Label htmlFor="sh-user">Username</Label>
-            <Input id="sh-user" defaultValue="@michael" />
+            <Input id="sh-user" defaultValue="@synccn" />
           </div>
           <Switch label="Show my profile publicly" defaultChecked />
           <Button className="mt-2" onClick={() => setSide(null)}>

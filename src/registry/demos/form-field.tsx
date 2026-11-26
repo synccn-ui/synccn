@@ -29,10 +29,10 @@ export default function FormFieldDemo() {
     <form onSubmit={submit} noValidate className="grid w-full max-w-sm gap-5">
       <FieldSet legend="Contact us" description="Fields marked * are required.">
         <FormField label="Name" required error={errors.name}>
-          <Input {...bind("name")} placeholder="Michael" />
+          <Input {...bind("name")} placeholder="synccn" />
         </FormField>
         <FormField label="Email" required error={errors.email} description="We only use this to reply.">
-          <Input type="email" {...bind("email")} placeholder="michael@example.com" />
+          <Input type="email" {...bind("email")} placeholder="synccn@example.com" />
         </FormField>
         <FormField label="Topic" required error={errors.topic}>
           <Select aria-label="Topic" value={v.topic || undefined} onValueChange={(topic) => setV({ ...v, topic })} placeholder="Choose a topic" options={[{ value: "support", label: "Support" }, { value: "billing", label: "Billing" }, { value: "feedback", label: "Feedback" }]} />

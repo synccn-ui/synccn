@@ -25,10 +25,10 @@ const series = {
 };
 
 const orders = [
-  { id: "#3201", who: "Michael", status: "Paid", total: "$320.00" },
-  { id: "#3200", who: "Riley", status: "Pending", total: "$89.50" },
-  { id: "#3199", who: "Jayden", status: "Paid", total: "$1,140.00" },
-  { id: "#3198", who: "Riley", status: "Refunded", total: "$42.00" },
+  { id: "#3201", who: "synccn", status: "Paid", total: "$320.00" },
+  { id: "#3200", who: "synccn", status: "Pending", total: "$89.50" },
+  { id: "#3199", who: "synccn", status: "Paid", total: "$1,140.00" },
+  { id: "#3198", who: "synccn", status: "Refunded", total: "$42.00" },
 ];
 const tone: Record<string, BadgeVariant> = { Paid: "success", Pending: "warning", Refunded: "secondary" };
 
@@ -63,7 +63,7 @@ export default function DashboardBlock() {
               <Bell className="size-4" />
               <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-destructive ring-2 ring-background" />
             </button>
-            <Avatar name="Michael" size="sm" />
+            <Avatar name="synccn" size="sm" />
           </div>
         </div>
         <div className="grid gap-4 p-4 sm:p-6">

@@ -4,9 +4,9 @@ import { CreditCard, GitPullRequest, MessageSquare, UserPlus } from "lucide-reac
 import { AnimatedList } from "@/registry/ui/animated-list";
 
 const events = [
-  { icon: UserPlus, title: "Riley joined the team", time: "now", tone: "bg-sky-500" },
+  { icon: UserPlus, title: "synccn joined the team", time: "now", tone: "bg-sky-500" },
   { icon: CreditCard, title: "Payment of $240 received", time: "now", tone: "bg-emerald-500" },
-  { icon: MessageSquare, title: "Jayden commented on Pricing", time: "now", tone: "bg-amber-500" },
+  { icon: MessageSquare, title: "synccn commented on Pricing", time: "now", tone: "bg-amber-500" },
   { icon: GitPullRequest, title: "PR #219 ready for review", time: "now", tone: "bg-violet-500" },
 ];
 

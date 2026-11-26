@@ -28,9 +28,7 @@ interface Member {
 
 export default function TeamBlock() {
   const [members, setMembers] = useState<Member[]>([
-    { name: "Michael", email: "michael@example.com", role: "Owner", status: "online" },
-    { name: "Riley", email: "riley@example.com", role: "Admin" },
-    { name: "Jayden", email: "jayden@example.com", role: "Editor", status: "away" },
+    { name: "synccn", email: "synccn@example.com", role: "Owner", status: "online" },
   ]);
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("Editor");

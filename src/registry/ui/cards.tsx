@@ -11,7 +11,7 @@ const fmt = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1
 export interface ProfileCardProps {
   /** Person's name. */
   name: string;
-  /** Username, e.g. @michael. */
+  /** Username, e.g. @synccn. */
   handle?: string;
   /** Job title shown after the handle. */
   role?: string;

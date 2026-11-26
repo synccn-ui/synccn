@@ -5,6 +5,15 @@
  */
 export const releases = [
   {
+    date: "2026-11-26",
+    title: "AI components, developer tools and four new blocks",
+    changes: [
+      { items: ["ai-message", "streaming-text", "reasoning", "tool-call", "sources", "prompt-suggestions", "model-selector", "agent-plan", "context-meter", "conversation"], summary: "New AI component." },
+      { items: ["json-viewer", "log-viewer", "key-value-editor", "command-snippet", "usage-meter", "onboarding-checklist", "event-calendar", "mention-input", "transfer-list", "interactive-grid", "currency-input", "theme-toggle", "shortcut-recorder", "emoji-picker", "image-cropper", "secret-field", "relative-time", "masonry", "tree-view", "virtual-list", "radar-chart", "stacked-bar-chart", "gantt-chart", "popconfirm", "shortcuts-dialog", "action-bar", "wizard", "error-boundary", "network-status", "feedback-widget", "expandable-card", "text-reveal"], summary: "New component." },
+      { items: ["ai-chat", "billing", "project-management", "crm"], summary: "New block." },
+    ],
+  },
+  {
     date: "2026-11-23",
     title: "Signature components, app blocks and synccn sync",
     changes: [

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center"><b>Copy it in. Make it yours.</b><br>
-162 accessible React components built on Tailwind CSS. Your code, not a dependency.</p>
+204 accessible React components built on Tailwind CSS. Your code, not a dependency.</p>
 
 <p align="center">
   <a href="https://synccn.com">Website</a> ·
@@ -22,8 +22,8 @@ This repository is the source of the synccn registry: every component, its examp
 
 | | |
 |---|---|
-| **162 components** | Inputs 37 · Display 40 · Overlays 16 · Navigation 12 · Feedback 10 · Motion 31 · Data 16 |
-| **8 blocks** | Analytics, developer platform, SaaS admin, dashboard, sign in, pricing, settings, team |
+| **204 components** | Inputs 45 · Display 44 · Overlays 19 · Navigation 13 · Feedback 15 · Motion 34 · Data 24 · AI 10 |
+| **12 blocks** | AI chat, billing, project management, CRM, analytics, developer platform, admin dashboard, dashboard, sign in, pricing, settings, team |
 | **TypeScript + JavaScript** | Strict TypeScript source, with a generated JavaScript version of every file |
 | **Next.js and Vite** | `"use client"` where needed, SSR-safe portals and media queries |
 | **Accessible** | Keyboard support and ARIA roles on every interactive part, reduced-motion aware |

@@ -20,19 +20,17 @@ interface Customer {
   joined: string;
 }
 
-const FIRST = ["Michael", "Riley", "Jayden", "Avery", "Jordan", "Casey", "Morgan", "Quinn", "Harper", "Rowan"];
-const LAST = ["Stone", "Park", "Reyes", "Lin", "Okafor", "Novak", "Ibarra", "Shah"];
 const PLANS = ["Free", "Pro", "Pro", "Enterprise"] as const;
 const STATUSES = ["Active", "Active", "Active", "Past due", "Cancelled"] as const;
 
 // Deterministic sample data, so server and browser render the same rows.
 const CUSTOMERS: Customer[] = Array.from({ length: 64 }, (_, i) => {
-  const name = `${FIRST[i % FIRST.length]} ${LAST[(i * 3) % LAST.length]}`;
+  const name = "synccn";
   const plan = PLANS[(i * 7) % PLANS.length];
   return {
     id: `cus_${(1000 + i * 37).toString(36)}`,
     name,
-    email: `${name.toLowerCase().replace(" ", ".")}@example.com`,
+    email: "synccn@example.com",
     plan,
     status: STATUSES[(i * 5) % STATUSES.length],
     mrr: plan === "Free" ? 0 : plan === "Pro" ? 29 * (1 + (i % 4)) : 480 + (i % 6) * 120,

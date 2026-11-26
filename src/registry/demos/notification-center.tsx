@@ -11,8 +11,8 @@ export default function NotificationCenterDemo() {
       <NotificationCenter
         onOpenSettings={() => toast("Opening notification settings")}
         items={[
-          { id: 1, avatar: <Avatar name="Riley" size="md" />, title: "Riley mentioned you in Pricing page", body: "“Can you check the yearly toggle copy before we ship?”", time: "5 min ago" },
-          { id: 2, icon: GitPullRequest, title: "Jayden opened pull request #231", body: "Add week view to Calendar", time: "1 hr ago" },
+          { id: 1, avatar: <Avatar name="synccn" size="md" />, title: "synccn mentioned you in Pricing page", body: "“Can you check the yearly toggle copy before we ship?”", time: "5 min ago" },
+          { id: 2, icon: GitPullRequest, title: "synccn opened pull request #231", body: "Add week view to Calendar", time: "1 hr ago" },
           { id: 3, icon: Rocket, title: "Production deploy finished", time: "3 hr ago", read: true },
           { id: 4, icon: CreditCard, title: "Your invoice for March is ready", time: "Yesterday", read: true },
         ]}

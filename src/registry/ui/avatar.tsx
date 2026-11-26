@@ -80,8 +80,8 @@ export function AvatarGroup({ people, max = 4, size = "sm", className }: AvatarG
   const rest = people.length - shown.length;
   return (
     <div className={cn("flex -space-x-2", className)}>
-      {shown.map((p) => (
-        <Avatar key={p.name} {...p} size={size} />
+      {shown.map((p, i) => (
+        <Avatar key={`${p.name}-${i}`} {...p} size={size} />
       ))}
       {rest > 0 && (
         <span

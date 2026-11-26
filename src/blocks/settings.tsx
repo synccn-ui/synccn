@@ -38,7 +38,7 @@ export default function SettingsBlock() {
         <TabsContent value="profile">
           <Row title="Photo" hint="Shown on your comments and tasks.">
             <div className="flex items-center gap-4">
-              <Avatar name="Michael" size="lg" />
+              <Avatar name="synccn" size="lg" />
               <Button size="sm" variant="outline" onClick={touch}>
                 Change photo
               </Button>
@@ -48,7 +48,7 @@ export default function SettingsBlock() {
             </div>
           </Row>
           <Row title="Name">
-            <Input defaultValue="Michael" onChange={touch} aria-label="Name" />
+            <Input defaultValue="synccn" onChange={touch} aria-label="Name" />
           </Row>
           <Row title="Bio" hint="A sentence or two for your profile.">
             <Textarea maxLength={160} defaultValue="Design engineer who loves clean interfaces." onChange={touch} aria-label="Bio" />
@@ -58,7 +58,7 @@ export default function SettingsBlock() {
           </Row>
         </TabsContent>
         <TabsContent value="notifications">
-          <Row title="Email" hint="Sent to michael@example.com">
+          <Row title="Email" hint="Sent to synccn@example.com">
             <Switch label="Mentions and replies" defaultChecked onCheckedChange={touch} />
             <Switch label="Weekly summary" defaultChecked onCheckedChange={touch} />
             <Switch label="Product news" onCheckedChange={touch} />
